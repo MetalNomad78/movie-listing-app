@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_listing_app/api/api_call.dart';
 import 'package:movie_listing_app/model/api.dart';
-import 'package:movie_listing_app/model/top_nowplaying.dart';
 import 'package:movie_listing_app/model/trending_movies.dart';
+import 'package:movie_listing_app/pages/watchlist_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -49,6 +49,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const WatchlistPage()),
+          );
+        },
+        child: Icon(Icons.favorite, color: Colors.white), // Heart icon in white color
+        backgroundColor: Colors.black, // Black background color
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -99,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }else if(snapshot.hasData){
                       //final data =snapshot.data;
-                      return TopPlaying(snapshot: snapshot,);
+                      return TrendingMovies(snapshot: snapshot,);
                     }else {
                       return const Center(child: CircularProgressIndicator());
                     }
@@ -127,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }else if(snapshot.hasData){
                       //final data =snapshot.data;
-                      return TopPlaying(snapshot: snapshot,);
+                      return TrendingMovies(snapshot: snapshot,);
                     }else {
                       return const Center(child: CircularProgressIndicator());
                     }

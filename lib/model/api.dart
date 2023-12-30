@@ -8,6 +8,7 @@ class Movie {
   String posterPath;
   String releaseDate;
   double voteAverage;
+  int id;
 
 
   Movie({
@@ -18,6 +19,7 @@ class Movie {
     required this.posterPath,
     required this.releaseDate,
     required this.voteAverage,
+    required this.id,
 
 });
 
@@ -30,6 +32,7 @@ class Movie {
         posterPath: json["poster_path"],
         releaseDate: json["release_date"],
         voteAverage: json["vote_average"],
+      id: json["id"],
     );
   }
 }

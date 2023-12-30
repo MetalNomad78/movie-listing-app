@@ -27,7 +27,7 @@ class TopPlaying extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: SizedBox(
-                    height: 200,
+                    height: 300,
                     width: 150,
                     child: Image.network(
                       filterQuality: FilterQuality.high,
