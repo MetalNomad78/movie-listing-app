@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:movie_listing_app/api/api_call.dart';
+import 'package:movie_listing_app/model/api.dart';
+import 'package:movie_listing_app/model/top_nowplaying.dart';
+import 'package:movie_listing_app/model/trending_movies.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  late Future<List<Movie>> trendingMovies;
+  late Future<List<Movie>> topRatedMovies;
+  late Future<List<Movie>> nowPlayingMovies;
+
+  @override
+  void initState(){
+    super.initState();
+    trendingMovies=Api().getTrendingMovies();
+    topRatedMovies=Api().getTopRatedMovies();
+    nowPlayingMovies=Api().getNowPlayingMovies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,89 +64,76 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                width: double.infinity,
-                child: CarouselSlider.builder(
-                  itemCount: 10,
-                  options: CarouselOptions(
-                    height: 300,
-                    autoPlay: true,
-                    enlargeCenterPage: true,
-                    pageSnapping: true,
-                    viewportFraction: 0.55,
-                    autoPlayAnimationDuration: const Duration(seconds: 1),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-
-                  ),
-                  itemBuilder:(context, itemIndex, pageViewIndex){
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        height: 300,
-                        width: 200,
-                        color: const Color(0xffA4161A),
-                      ),
-                    );
+                child: FutureBuilder(
+                  future: trendingMovies,
+                  builder: (context,snapshot){
+                    if(snapshot.hasError){
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }else if(snapshot.hasData){
+                      //final data =snapshot.data;
+                      return TrendingMovies(snapshot: snapshot,);
+                    }else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
                   },
                 ),
               ),
-                const SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text('Top Rated Movies',
                 style:
-                GoogleFonts.oswald(fontSize: 25,fontWeight: FontWeight.bold),
-
+                GoogleFonts.oswald(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 20),
-              SizedBox(height: 200,width: double.infinity,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: 10,
-                  itemBuilder: (context,index){
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                         height: 200,
-                        width: 150,
-                        color: const Color(0xffA4161A),
-                      ),
-                    ),
-                  );
-                  }
-              ),
+              SizedBox(
+                child: FutureBuilder(
+                  future: topRatedMovies,
+                  builder: (context,snapshot){
+                    if(snapshot.hasError){
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }else if(snapshot.hasData){
+                      //final data =snapshot.data;
+                      return TopPlaying(snapshot: snapshot,);
+                    }else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
               ),
 
               const SizedBox(height: 20),
               Text('Now Playing',
                 style:
-                GoogleFonts.oswald(fontSize: 25,fontWeight: FontWeight.bold),
+                GoogleFonts.oswald(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                ),
 
               ),
               const SizedBox(height: 20),
-              SizedBox(height: 200,width: double.infinity,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: 10,
-                    itemBuilder: (context,index){
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            height: 200,
-                            width: 150,
-                            color: Color(0xffA4161A),
-                          ),
-                        ),
+              SizedBox(
+                child: FutureBuilder(
+                  future: nowPlayingMovies,
+                  builder: (context,snapshot){
+                    if(snapshot.hasError){
+                      return Center(
+                        child: Text(snapshot.error.toString()),
                       );
+                    }else if(snapshot.hasData){
+                      //final data =snapshot.data;
+                      return TopPlaying(snapshot: snapshot,);
+                    }else {
+                      return const Center(child: CircularProgressIndicator());
                     }
+                  },
                 ),
-              )
-
-
-              // Add more content/widgets as needed
+              ),
             ],
           ),
         ),
@@ -154,3 +163,6 @@ class _CustomClipper extends CustomClipper<Path> {
     return true;
   }
 }
+
+
+
